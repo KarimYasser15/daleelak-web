@@ -66,7 +66,7 @@ function Home() {
 
 
     const handleCardClick = (guide: Guide) => {
-        setSelectedGuide(guide);
+        navigate(`/guide/${guide.id}`);
     };
 
     const closeModal = () => {
