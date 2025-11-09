@@ -5,6 +5,7 @@ import Login from './authentication/login.tsx'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Register from './authentication/register.tsx'
 import Home from './home/home.tsx'
+import CreateGuide from './createGuide/createGuide.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -14,6 +15,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/create-guide" element={<CreateGuide />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
