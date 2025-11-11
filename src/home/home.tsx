@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import apiClient from "../api/client";
 import "./home.css";
 
 interface Guide {
@@ -28,18 +28,11 @@ function Home() {
     const storedUser = localStorage.getItem("user");
     const userData = storedUser ? JSON.parse(storedUser) : null;
 
-    // Create axios config with auth header
-    const getAuthConfig = () => ({
-        headers: {
-            Authorization: `Bearer ${userData?.accessToken}`,
-        },
-    });
-
     const fetchGuides = async () => {
         if (!userData) return;
         try {
-            const endpoint = `${import.meta.env.VITE_BACKEND_URL}user/${userData.id}/guide/`;
-            const res = await axios.get(endpoint, getAuthConfig());
+            const endpoint = `user/${userData.id}/guide/`;
+            const res = await apiClient.get<Guide[]>(endpoint);
             setGuides(res.data);
         } catch (err: any) {
             setErrors(err.message);
@@ -53,8 +46,7 @@ function Home() {
     const handleLogout = async () => {
         setIsLoading(true);
         try {
-            const logoutEndPoint = `${import.meta.env.VITE_BACKEND_URL}auth/logout`;
-            await axios.post(logoutEndPoint, {}, getAuthConfig());
+            await apiClient.post("auth/logout", {});
             localStorage.removeItem("user");
             navigate("/login");
         } catch (err: any) {

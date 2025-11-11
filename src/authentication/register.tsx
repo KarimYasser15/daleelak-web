@@ -1,7 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import.meta.env;
+import apiClient from "../api/client";
 
 interface FormData {
     fullName: string;
@@ -25,7 +24,7 @@ function Login() {
     const validateForm = () => {
         const formErrors: FormErrors = {};
         if (!formData.email.trim()) formErrors.email = "Email is required";
-        if (!formData.fullName.trim()) formErrors.email = "Full Name is required";
+        if (!formData.fullName.trim()) formErrors.fullName = "Full Name is required";
         if (!formData.password) formErrors.password = "Password is required";
         setErrors(formErrors);
         return Object.keys(formErrors).length === 0;
@@ -42,8 +41,7 @@ function Login() {
         setIsLoading(true);
         setErrors({});
         try {
-            const registerEndPoint = `${import.meta.env.VITE_BACKEND_URL}auth/register`;
-            await axios.post(registerEndPoint, formData);
+            await apiClient.post("auth/register", formData);
             navigate("/login");
         } catch (error: any) {
             const message = error?.response?.data?.message ?? error?.message ?? "Unknown Error";
@@ -62,7 +60,7 @@ function Login() {
                 <form onSubmit={handleSubmit}>
                     <div>
                         <input
-                            type="fullName"
+                            type="text"
                             name="fullName"
                             placeholder="Full Name"
                             value={formData.fullName}

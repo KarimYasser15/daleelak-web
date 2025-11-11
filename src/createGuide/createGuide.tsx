@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import apiClient from "../api/client";
 import "./createGuide.css";
 
 function CreateGuide() {
@@ -16,12 +16,6 @@ function CreateGuide() {
         description: "",
         location: "",
         notes: ""
-    });
-
-    const getAuthConfig = () => ({
-        headers: {
-            Authorization: `Bearer ${userData?.accessToken}`,
-        },
     });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -54,8 +48,8 @@ function CreateGuide() {
         setSuccessMessage(null);
 
         try {
-            const endpoint = `${import.meta.env.VITE_BACKEND_URL}user/${userData.id}/guide/`;
-            await axios.post(endpoint, formData, getAuthConfig());
+            const endpoint = `user/${userData.id}/guide/`;
+            await apiClient.post(endpoint, formData);
 
             setSuccessMessage("Guide created successfully!");
 
@@ -77,8 +71,7 @@ function CreateGuide() {
 
     const handleLogout = async () => {
         try {
-            const logoutEndPoint = `${import.meta.env.VITE_BACKEND_URL}auth/logout`;
-            await axios.post(logoutEndPoint, {}, getAuthConfig());
+            await apiClient.post("auth/logout", {});
             localStorage.removeItem("user");
             navigate("/login");
         } catch (err: any) {
