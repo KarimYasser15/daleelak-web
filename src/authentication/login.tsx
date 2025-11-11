@@ -1,7 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import.meta.env;
+import apiClient from "../api/client";
 
 interface FormData {
     email: string;
@@ -39,8 +38,7 @@ function Login() {
         setIsLoading(true);
         setErrors({});
         try {
-            const loginEndPoint = `${import.meta.env.VITE_BACKEND_URL}auth/login`;
-            const response = await axios.post(loginEndPoint, formData);
+            const response = await apiClient.post("auth/login", formData);
             localStorage.setItem("user", JSON.stringify(response.data));
             navigate("/home");
         } catch (error: any) {
